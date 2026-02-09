@@ -12,4 +12,4 @@ app = FastAPI()
 ╰──────────────────────────────────────────────╯
 '''
 
-from app.routers import customers
+from app.routers import customers, orders
