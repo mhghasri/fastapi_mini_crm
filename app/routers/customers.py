@@ -8,10 +8,10 @@ customer routers
 ╰──────────────────────────────────────────────╯
 '''
 
-from app.schemas import GetCustomerSchema, UpdateCustomerSchema, BaseCustomerSchema, PostCustomerSchema
+from app.schemas import GetCustomerSchema, UpdateCustomerSchema, BaseCustomerSchema, PostCustomerSchema, GetCustomerOrderSchema
 from fastapi import Depends, Path, status, HTTPException, Query
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_
 from app.models import Customer
 from app.database import get_db
@@ -42,9 +42,9 @@ def get_customers(q: str | None = Query(default=None, deprecated=True, alias="se
 ╰──────────────────────────────────────────────╯
 '''
 
-@app.get("/customers/{customer_id}", response_model=GetCustomerSchema, status_code=status.HTTP_200_OK)
+@app.get("/customers/{customer_id}", response_model=GetCustomerOrderSchema, status_code=status.HTTP_200_OK)
 def retrieve_customer(customer_id: int, db: Session = Depends(get_db)):
-    query = db.query(Customer).filter_by(id=customer_id).one_or_none()
+    query = db.query(Customer).options(joinedload(Customer.orders)).filter_by(id=customer_id).one_or_none()
 
     if query:
         return query

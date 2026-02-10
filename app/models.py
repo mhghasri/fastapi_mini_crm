@@ -12,7 +12,7 @@ class Customer(Base):
     created_at = Column(DateTime(), default=func.now())
     updated_at = Column(DateTime(), default=func.now(), onupdate=func.now())
 
-    order =relationship("Order", backref="customer", cascade="all, delete-orphan")
+    orders =relationship("Order", backref="customer", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"customer_id: {self.id}, name: {self.name}, email: {self.email}"
@@ -25,6 +25,7 @@ class Order(Base):
     description = Column(Text(), nullable=True)
     price = Column(Float(), default=0)
     created_at = Column(DateTime(), default=func.now())
+    updated_at = Column(DateTime(), default=func.now(), onupdate=func.now())
 
     customer_id = Column(Integer, ForeignKey("customer.id"))
 
